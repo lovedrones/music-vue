@@ -19,16 +19,19 @@
       >
         <h5>Drop your files here</h5>
       </div>
+      <input type="file" multiple @change="upload($event)" />
       <hr class="my-6" />
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="font-bold text-sm">{{ upload.name }}</div>
+        <div class="font-bold text-sm" :class="upload.text_class">
+          <i :class="upload.icon"></i> {{ upload.name }}
+        </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
           <div
-            class="transition-all progress-bar bg-blue-400"
-            :class="'bg-blue-400'"
+            class="transition-all progress-bar"
+            :class="upload.variant"
             :style="{ width: upload.current_progress + '%' }"
           ></div>
         </div>
@@ -36,8 +39,9 @@
     </div>
   </div>
 </template>
+
 <script>
-import { storage } from '@/firebase'
+import { storage, auth, songsCollection } from '@/firebase'
 
 export default {
   name: 'Upload',
@@ -51,29 +55,71 @@ export default {
     upload($event) {
       this.is_dragover = false
 
-      const files = [...$event.dataTransfer.files]
+      const files = $event.dataTransfer ? [...$event.dataTransfer.files] : [...$event.target.files]
 
       files.forEach((file) => {
         if (file.type !== 'audio/mpeg') {
           return
         }
 
-        const storageRef = storage.ref() //music-cc2ed.appspot.com/songs
-        const songsRef = storageRef.child(`songs/${file.name}`) //music-cc2ed.appspot.com/songs/example.mp3
+        const storageRef = storage.ref() // music-c2596.appspot.com
+        const songsRef = storageRef.child(`songs/${file.name}`) // music-c2596.appspot.com/songs/example.mp3
         const task = songsRef.put(file)
 
-        this.uploads.push({
-          task,
-          current_progress: 0,
-          name: file.name
-        })
+        const uploadIndex =
+          this.uploads.push({
+            task,
+            current_progress: 0,
+            name: file.name,
+            variant: 'bg-blue-400',
+            icon: 'fas fa-spinner fa-spin',
+            text_class: ''
+          }) - 1
 
-        task.on('state_changed', (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        })
+        task.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            this.uploads[uploadIndex].current_progress = progress
+          },
+          (error) => {
+            this.uploads[uploadIndex].variant = 'bg-red-400'
+            this.uploads[uploadIndex].icon = 'fas fa-times'
+            this.uploads[uploadIndex].text_class = 'text-red-400'
+            console.log(error)
+          },
+          async () => {
+            const song = {
+              uid: auth.currentUser.uid,
+              display_name: auth.currentUser.displayName,
+              original_name: task.snapshot.ref.name,
+              modified_name: task.snapshot.ref.name,
+              genre: '',
+              comment_count: 0
+            }
+
+            song.url = await task.snapshot.ref.getDownloadURL()
+            await songsCollection.add(song)
+
+            this.uploads[uploadIndex].variant = 'bg-green-400'
+            this.uploads[uploadIndex].icon = 'fas fa-check'
+            this.uploads[uploadIndex].text_class = 'text-green-400'
+          }
+        )
       })
+
       console.log(files)
+    },
+    cancelUploads() {
+      this.uploads.forEach((upload) => {
+        upload.task.cancel()
+      })
     }
+  },
+  beforeUnmount() {
+    this.uploads.forEach((upload) => {
+      upload.task.cancel()
+    })
   }
 }
 </script>
