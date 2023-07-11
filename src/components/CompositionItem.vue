@@ -3,8 +3,8 @@
     <div v-show="!showForm">
       <h4 class="inline-block text-2xl font-bold">{{ song.modified_name }}</h4>
       <button
-        class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
         @click.prevent="deleteSong"
+        class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
       >
         <i class="fa fa-times"></i>
       </button>
@@ -23,12 +23,12 @@
       >
         {{ alert_message }}
       </div>
-      <vee-form :validation-schema="schema" :initial-values="song" @submit="edit">
+      <vee-form @submit="edit" :validation-schema="schema" :initial-values="song">
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
           <vee-field
-            type="text"
             name="modified_name"
+            type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
             @input="updateUnsavedFlag(true)"
@@ -38,8 +38,8 @@
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
           <vee-field
-            type="text"
             name="genre"
+            type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
             @input="updateUnsavedFlag(true)"
@@ -65,6 +65,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { songsCollection, storage } from '@/firebase'
 
@@ -101,7 +102,7 @@ export default {
       in_submission: false,
       show_alert: false,
       alert_variant: 'bg-blue-500',
-      alert_message: 'Please wait! Updating song info.'
+      alert_message: 'Please wait! Updating song info'
     }
   },
   methods: {
@@ -109,7 +110,7 @@ export default {
       this.in_submission = true
       this.show_alert = true
       this.alert_variant = 'bg-blue-500'
-      this.alert_message = 'Please wait! Updating song info.'
+      this.alert_message = 'Please wait! Updating song info'
 
       try {
         await songsCollection.doc(this.song.docID).update(values)

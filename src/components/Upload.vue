@@ -30,9 +30,9 @@
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
           <div
-            class="transition-all progress-bar"
             :class="upload.variant"
-            :style="{ width: upload.current_progress + '%' }"
+            class="transition-all progress-bar"
+            :style="{ width: `${upload.current_progress}%` }"
           ></div>
         </div>
       </div>
@@ -111,8 +111,6 @@ export default {
           }
         )
       })
-
-      console.log(files)
     },
     cancelUploads() {
       this.uploads.forEach((upload) => {

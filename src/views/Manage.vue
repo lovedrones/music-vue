@@ -30,10 +30,10 @@
 </template>
 
 <script>
-// import useUserStore from '@/stores/user'
+// import useUserStore from "@/stores/user";
 import AppUpload from '@/components/Upload.vue'
-import CompositionItem from '@/components/CompositionItem.vue'
 import { songsCollection, auth } from '@/firebase'
+import CompositionItem from '@/components/CompositionItem.vue'
 
 export default {
   name: 'Manage',
@@ -76,19 +76,23 @@ export default {
     if (!this.unsavedFlag) {
       next()
     } else {
-      //es-lint-disable-next-line no-alert, no restricted-globals
-      const leave = confirm('You have unsaved Changes. Are you sure you want to leave?')
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      const leave = confirm('You have unsaved changes. Are you sure you want to leave?')
       next(leave)
     }
   }
+  // beforeRouteLeave(to, from, next) {
+  //   this.$refs.upload.cancelUploads();
+  //   next();
+  // },
   // beforeRouteEnter(to, from, next) {
-  //   const store = useUserStore()
+  //   const store = useUserStore();
 
   //   if (store.userLoggedIn) {
-  //     next()
+  //     next();
   //   } else {
-  //     next({ name: 'home' })
+  //     next({ name: "home" });
   //   }
-  // }
+  // },
 }
 </script>
