@@ -36,7 +36,7 @@
         >
           {{ comment_alert_message }}
         </div>
-        <vee-form :validation-schema="schema" @submit="addComment" v-if="userLoggedIn">
+        <vee-form :validation-schema="schema" @submit="addComment">
           <vee-field
             as="textarea"
             name="comment"
