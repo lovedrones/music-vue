@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { songsCollection, storage } from '@/firebase'
+import { songsCollection, storage } from '@/includes/firebase'
 
 export default {
   name: 'CompositionItem',

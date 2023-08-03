@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { auth, usersCollection } from '@/firebase'
+import { auth, usersCollection } from '@/includes/firebase'
 
 export default defineStore('user', {
   state: () => ({

@@ -17,7 +17,7 @@ import AppHeader from '@/components/Header.vue'
 import Auth from '@/components/Auth.vue'
 import { mapWritableState } from 'pinia'
 import useUserStore from '@/stores/user'
-import { auth } from './firebase'
+import { auth } from './includes/firebase'
 import AppPlayer from '@/components/Player.vue'
 
 export default {

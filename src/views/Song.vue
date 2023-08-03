@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { songsCollection, auth, commentsCollection } from '@/firebase'
+import { songsCollection, auth, commentsCollection } from '@/includes/firebase'
 import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/user'
 import usePlayerStore from '@/stores/player'
